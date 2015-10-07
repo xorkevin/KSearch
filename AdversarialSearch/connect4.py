@@ -6,24 +6,28 @@ import math as math
 #github:xorkevin
 
 class Connect4State(AB.State):
-    def __init__(self, aState, aInp, prevInp):
-        '''aState should be a 6*7 matrix (row major)'''
+    def __init__(self, aState, aInp, prevInp, id, nextId):
+        '''aState should be a 6*7 matrix (row major); aInp is a 3tuple: id, nextId, column'''
         if aState is None:
             self._state = np.matrix(np.zeros((6, 7)))
         else:
             self._state = aState
         self._inp = aInp
         self._prevInp = prevInp
+        self._id = id
+        self._nextId = nextId
 
     def nextStates(self):
         states = []
-        for inp in self._inp:
+        if Connect4Game.win(self) > 0:
+            return states
+        for inp in self._inp._inputs:
             states.append(self.nextState(inp))
-        # return states
+        return states
 
     def nextState(self, aInp):
         id, nextId, col = aInp
-        currentState = self._state
+        currentState = np.matrix(self._state)
         r, c = currentState.shape
         for i in range(0, r+1):
             if i == r:
@@ -36,11 +40,14 @@ class Connect4State(AB.State):
         for i in range(0, c):
             if currentState[0, i] == 0:
                 inp.addInp((nextId, id, i))
-        return Connect4State(currentState, inp, aInp)
+        return Connect4State(currentState, inp, aInp, nextId, id)
 
     def heuristic(self):
-        score = 0
-        #return score
+        if Connect4Game.win(self) == self._id:
+            return 16
+        if Connect4Game.win(self) == self._nextId:
+            return 0
+        return 8
 
     def __str__(self):
         x = ''
@@ -52,20 +59,26 @@ class Connect4State(AB.State):
         return x
 
 
+settings = {
+    'p1': 1,
+    'p2': 2,
+    'nought': 0
+    }
+
 class Connect4Game:
     def __init__(self, a, b):
         self._player1 = a
         self._player2 = b
 
-        self._idp1 = 1
-        self._idp2 = 2
-        self._idnought = 0
+        self._idp1 = settings['p1']
+        self._idp2 = settings['p2']
+        self._idnought = settings['nought']
 
         inp = AB.Inp()
         for i in range(0, 7):
             inp.addInp((self._idp1, self._idp2, i))
 
-        self._state = Connect4State(None, inp, None)
+        self._state = Connect4State(None, inp, None, self._idp1, self._idp2)
 
     def game(self):
         winner = self.win(self._state)
@@ -98,10 +111,11 @@ class Connect4Game:
         print('finish')
         print(str(self._state))
 
-    def win(self, state):
-        nought = self._idnought
-        p1 = self._idp1
-        p2 = self._idp2
+    @staticmethod
+    def win(state):
+        nought = settings['nought']
+        p1 = settings['p1']
+        p2 = settings['p2']
 
         row = np.matrix([True, True, True, True])
         diagonal1 = np.matrix([
@@ -172,7 +186,10 @@ class HumanPlayer(Player):
 
 class AIPlayer(Player):
     def move(self, state, id, nextId):
-        return AB.alphabeta(state, -1, -math.inf, math.inf, True)
+        # return AB.alphabeta(state, -1, -math.inf, math.inf, True)._prevInp
+        newState = AB.alphabeta(state, -1, -math.inf, math.inf, True)
+        print('newState ' + str(newState))
+        return newState._prevInp
 
 '''
 Todo:

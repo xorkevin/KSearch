@@ -31,6 +31,7 @@ import connect4 as c4
 #     print(str(i))
 
 
+# game = c4.Connect4Game(c4.HumanPlayer(), c4.AIPlayer())
 game = c4.Connect4Game(c4.HumanPlayer(), c4.HumanPlayer())
 
 game.game()

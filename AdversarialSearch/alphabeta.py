@@ -11,24 +11,24 @@ class Inp:
     def clearInputs(self):
         self._inputs = []
 
-    def addInp(self, aInput):
-        '''aInput should be a tuple (x, y, z, ...)'''
-        self._inputs.append(aInput)
+    def addInp(self, aInp):
+        '''aInp should be a tuple (x, y, z, ...)'''
+        self._inputs.append(aInp)
 
 
 class State:
-    def __init__(self, aState, aInput, prevInput):
+    def __init__(self, aState, aInp, prevInp):
         self._state = aState
-        self._inp = aInput
-        self._prevInput = prevInput
+        self._inp = aInp
+        self._prevInp = prevInp
 
     def nextStates(self):
         states = []
-        for inp in self._input:
+        for inp in self._inp:
             states.append(self.nextState(inp))
         # return states
 
-    def nextState(self, aInput):
+    def nextState(self, aInp):
         currentState = self._state
         # return next state
 
@@ -37,7 +37,7 @@ class State:
         #return score
 
 
-def alphabeta(self, state, depth, a, b, maxTurn):
+def alphabeta(state, depth, a, b, maxTurn):
     alpha = a
     beta = b
     children = state.nextStates()
@@ -45,12 +45,15 @@ def alphabeta(self, state, depth, a, b, maxTurn):
     if depth == 0 or len(children) == 0:
         return state
 
+    # print(str(len(children)))
+
     futureState = None
     v = None
     if maxTurn:
         v = -math.inf
         for child in children:
             x = alphabeta(child, depth-1, alpha, beta, False)
+            print(str(x))
             if v > x.heuristic():
                 v = x.heuristic()
                 futureState = x
@@ -61,7 +64,7 @@ def alphabeta(self, state, depth, a, b, maxTurn):
         v = math.inf
         for child in children:
             x = alphabeta(child, depth-1, alpha, beta, True)
-            v = min(v, x.heuristic())
+            print(str(x))
             if v < x.heuristic():
                 v = x.heuristic()
                 futureState = x
