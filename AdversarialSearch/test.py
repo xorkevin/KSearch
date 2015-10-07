@@ -1,5 +1,6 @@
 import numpy as np
 import connect4 as c4
+
 #Kevin Wang
 #github:xorkevin
 
@@ -31,7 +32,16 @@ import connect4 as c4
 #     print(str(i))
 
 
-# game = c4.Connect4Game(c4.HumanPlayer(), c4.AIPlayer())
-game = c4.Connect4Game(c4.HumanPlayer(), c4.HumanPlayer())
+game = c4.Connect4Game(c4.HumanPlayer(), c4.AIPlayer())
+# game = c4.Connect4Game(c4.HumanPlayer(), c4.HumanPlayer())
 
 game.game()
+
+# inp = AB.Inp()
+# for i in range(0, 7):
+#     inp.addInp((1, 2, i))
+#
+# state = c4.Connect4State(None, inp, None, 1, 2)
+#
+# for child in state.nextStates():
+#     print(str(child))

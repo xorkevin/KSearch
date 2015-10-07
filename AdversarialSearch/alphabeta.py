@@ -43,6 +43,8 @@ def alphabeta(state, depth, a, b, maxTurn):
     children = state.nextStates()
 
     if depth == 0 or len(children) == 0:
+        # print('hello')
+        # print(str(state))
         return state
 
     # print(str(len(children)))
@@ -53,7 +55,7 @@ def alphabeta(state, depth, a, b, maxTurn):
         v = -math.inf
         for child in children:
             x = alphabeta(child, depth-1, alpha, beta, False)
-            print(str(x))
+            # print(str(x))
             if v > x.heuristic():
                 v = x.heuristic()
                 futureState = x
@@ -64,7 +66,7 @@ def alphabeta(state, depth, a, b, maxTurn):
         v = math.inf
         for child in children:
             x = alphabeta(child, depth-1, alpha, beta, True)
-            print(str(x))
+            # print(str(x))
             if v < x.heuristic():
                 v = x.heuristic()
                 futureState = x
